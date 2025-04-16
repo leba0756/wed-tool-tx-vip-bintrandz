@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>TOOL BINTRAN DZ HACK TÀI XỈU HIT CLUB VIP </title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: monospace;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 28px;
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow {
+      0% { color: red; }
+      20% { color: orange; }
+      40% { color: yellow; }
+      60% { color: green; }
+      80% { color: blue; }
+      100% { color: violet; }
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 300px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 20px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>TOOL BINTRANDZ HACK TÀI XỈU HIT CLUB VIP</h1>
+  <input id="keyInput" placeholder="Nhập key truy cập">
+  <br>
+  <button onclick="verifyKey()">Xác nhận</button>
+  <div class="message" id="message"></div>
+
+  <script>
+    const typeText = (el, text, speed = 50, callback) => {
+      let i = 0;
+      const typing = setInterval(() => {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(typing);
+          if (callback) callback();
+        }
+      }, speed);
+    };
+
+    function verifyKey() {
+      const inputKey = document.getElementById("keyInput").value.trim();
+      const msg = document.getElementById("message");
+      msg.innerHTML = "";
+
+      if (!inputKey) {
+        msg.innerText = "Vui lòng nhập key vào.";
+        return;
+      }
+
+      const list = JSON.parse(localStorage.getItem("keyList")) || [];
+      const index = list.findIndex(k => k.key === inputKey);
+      const keyObj = list[index];
+
+      if (!keyObj) {
+        typeText(msg, "Key sai rồi bé ơi\nMua key vip liên hệ Telegram\n@bintrandz");
+        return;
+      }
+
+      if (!keyObj.forever && Date.now() > keyObj.expire) {
+        typeText(msg, "Key này đã hết hạn rồi nhé.");
+        return;
+      }
+
+      if (keyObj.usesLeft !== null && keyObj.usesLeft <= 0) {
+        typeText(msg, "Key này đã đạt giới hạn người dùng rồi.");
+        return;
+      }
+
+      if (keyObj.usesLeft !== null) {
+        keyObj.usesLeft -= 1;
+        list[index] = keyObj;
+        localStorage.setItem("keyList", JSON.stringify(list));
+      }
+
+      localStorage.setItem("activeKey", inputKey);
+
+      typeText(msg, "ĐÁNH SẬP WED NHÀ CÁI CHO THẦY 🤪", 60, () => {
+        setTimeout(() => {
+          let countdown = 3;
+          const interval = setInterval(() => {
+            msg.innerHTML = `Chuyển trang sau ${countdown} giây...`;
+            countdown--;
+            if (countdown < 0) {
+              clearInterval(interval);
+              window.location.href = "main.html";
+            }
+          }, 1000);
+        }, 1000);
+      });
+    }
+  </script>
+
+</body>
+</html>

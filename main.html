@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>TOOL TÀI XỈU - MD5 & Mã Phiên</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    #keyTime {
+      margin-bottom: 10px;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      margin-bottom: 20px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      margin: 0 5px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab.active {
+      background: #2c3e50;
+    }
+
+    input {
+      width: 85%;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button.analyze {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: #27ae60;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button.analyze:hover {
+      background: #219150;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .tai { color: #e74c3c; }
+    .xiu { color: #1abc9c; }
+  </style>
+
+  <script>
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function checkActiveKeyAndCountdown() {
+      const activeKey = localStorage.getItem("activeKey");
+      const list = JSON.parse(localStorage.getItem("keyList")) || [];
+      const keyObj = list.find(k => k.key === activeKey);
+
+      if (!keyObj) {
+        alert("Key không tồn tại!");
+        localStorage.removeItem("activeKey");
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (keyObj.usesLeft !== null && keyObj.usesLeft <= 0) {
+        alert("Key đã hết số lượt sử dụng!");
+        localStorage.removeItem("activeKey");
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (!keyObj.forever && Date.now() > keyObj.expire) {
+        alert("Key đã hết hạn!");
+        localStorage.removeItem("activeKey");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const timeDisplay = document.getElementById("keyTime");
+      if (timeDisplay) {
+        if (keyObj.forever) {
+          timeDisplay.textContent = "Key: Vĩnh viễn";
+        } else {
+          const timeLeft = keyObj.expire - Date.now();
+          timeDisplay.textContent = `Thời gian còn lại: ${formatTime(timeLeft)}`;
+        }
+      }
+    }
+
+    function logout() {
+      if (confirm("Bạn có chắc muốn đăng xuất không?")) {
+        localStorage.removeItem("activeKey");
+        window.location.href = "index.html";
+      }
+    }
+
+    window.addEventListener("load", () => {
+      checkActiveKeyAndCountdown();
+      setInterval(checkActiveKeyAndCountdown, 1000);
+    });
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h2>TOOL VIP BINTRANDZ HACK TX HITCLUB</h2>
+    <div id="keyTime">Đang kiểm tra key...</div>
+    <button class="logout-btn" onclick="logout()">Đăng xuất / Thoát</button>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('md5')">MD5</button>
+      <button class="tab" onclick="switchTab('maphien')">Mã Phiên</button>
+    </div>
+
+    <input type="text" id="inputCode" placeholder="Nhập mã MD5 hoặc mã phiên..." />
+    <button class="analyze" onclick="predictTX()">Phân Tích</button>
+    <div id="resultBox" class="result">Kết quả sẽ hiển thị ở đây</div>
+  </div>
+
+  <script>
+    let currentTab = 'md5';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById("inputCode").value = "";
+      document.getElementById("resultBox").innerText = "Kết quả sẽ hiển thị ở đây";
+
+      document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const placeholder = tab === 'md5' ? 'Nhập mã MD5...' : 'Nhập mã phiên...';
+      document.getElementById("inputCode").placeholder = placeholder;
+    }
+
+    function predictTX() {
+      const input = document.getElementById("inputCode").value.trim();
+      const resultBox = document.getElementById("resultBox");
+
+      if (!input) {
+        resultBox.innerHTML = "⚠️ Vui lòng nhập mã.";
+        resultBox.className = "result";
+        return;
+      }
+
+      // Chuyển mã thành số để phân tích
+      let total = 0;
+      for (let i = 0; i < input.length; i++) {
+        total += input.charCodeAt(i);
+      }
+
+      // Lấy 3 chữ số cuối
+      let lastThree = total % 1000;
+      let sum = Math.floor(lastThree / 100) + Math.floor((lastThree % 100) / 10) + (lastThree % 10);
+
+      // Xác định tài/xỉu
+      let result = sum >= 11 ? "🫰 Tài" : "🖕 Xỉu";
+
+      // Tính xác suất dựa trên giá trị sum
+      let percent;
+      if (sum >= 11) {
+        // Tài: Xác suất tỷ lệ thuận với sum (từ 70% đến 95%)
+        percent = 70 + ((sum - 11) / (18 - 11)) * 25; // Tỷ lệ từ 70% đến 95%
+      } else {
+        // Xỉu: Xác suất tỷ lệ nghịch với sum (từ 70% đến 95%)
+        percent = 95 - ((sum - 3) / (10 - 3)) * 25; // Tỷ lệ từ 70% đến 95%
+      }
+      percent = percent.toFixed(2);
+
+      // Hiển thị kết quả với màu sắc tương ứng
+      resultBox.innerHTML = `🔍 Kết quả: <span class="${sum >= 11 ? 'tai' : 'xiu'}">${result}</span><br>🎯 Tỉ lệ chính xác: <strong>${percent}%</strong>`;
+      resultBox.className = `result ${sum >= 11 ? 'tai' : 'xiu'}`;
+    }
+  </script>
+
+</body>
+</html>
